@@ -32,7 +32,6 @@ mkswap -f ${TGT}5
 mkdir -p /mnt${TGT}1
 mount -t ext4 ${TGT}1 /mnt${TGT}1
  cd /mnt${TGT}1 ; dump -a0f - ${SRC}1 | restore -rf - ; cd
- echo ok
  # touch /part_SRC_$( blkid -s UUID |grep \
  #    $( df -h | grep ${SRC} | cut -f 1 -d " " ) | cut -f 2 -d '"' )
  # touch /mnt${TGT}1/part_TGT_$( blkid -s UUID | grep \
@@ -43,7 +42,7 @@ mount -t ext4 ${TGT}1 /mnt${TGT}1
                chroot /mnt${TGT}1
    as=( \$( echo "\$o_blkid" | grep \${SRC} | sort | tr -d ' ' ) )
    ad=( \$( echo "\$o_blkid" | grep \${TGT} | sort | tr -d ' ' ) )
-      for i in \${!as[@]} ; do sed -i "s/"\$( echo \${as[\$i]} \
+   for i in \${!as[@]} ; do sed -i "s/"\$( echo \${as[\$i]} \
       | cut -d '"' -f 2 )"/"\$( echo \${ad[\$i]} \
       | cut -d '"' -f 2 )"/g" /etc/fstab ; done
    echo RESUME=UUID=\$( blkid |grep -E "\${TGT}.+swap" \
