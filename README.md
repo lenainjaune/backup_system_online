@@ -11,11 +11,12 @@ Pour le moment, ces tests, je les ai réalisé en environnement virtuel sous KVM
 
 Voici le résultat :
 ```sh
+# Prévu en l'état pour Debian (testé sous Debian Buster 64 bits) => adapter pour un autre système ou attendre la MAJ qui gèrera mieux !
 # Pour que GRUB ne fasse pas le lien avec SRC, on rend os-prober INexécutable 
 #  (https://unix.stackexchange.com/questions/634150/hide-devices-in-chrooted-environment/634655#634655)
 # Une fois chrooté un script intégré est exécuté et affiché sur stdout ;
 #  il FAUT échapper chaque $ et \ (=> \$ et \\) pour qu'il soient appliqués à l'exécution après le chroot
-# Nota : sda est le disque source et sdb est le disque cible (le clone)
+# Nota : sda = disque source, sdb = disque cible (le clone) ; sda ici composé de sda1 (system EXT4), sda2 (partition étendue) et sda5 (swap)
 
 apt -y install dump parted gawk acl
 SRC=/dev/sda TGT=/dev/sdb
