@@ -5,7 +5,7 @@ J'ai lu les préconisations du NAS OMV (https://openmediavault.readthedocs.io/en
 
 Je me suis dit que ce ne serait pas pratique d'avoir à faire régulièrement chaque sauvegarde manuelle du système, puisqu'il faudrait la faire "hors ligne" et penser à la faire. Aussi je me suis demandé, s'il n'existait pas une solution pour cloner un système "en ligne" sous Linux (d'autant que je connais VMWare Convertor qui le fait sous Windows - https://wiki.maxcorp.org/realisation-dun-p2v-avec-vmware-vcenter-converter-standalone/) et je suis tombé sur cette procédure (https://stackoverflow.com/questions/37488629/how-to-use-dump-and-restore-to-clone-a-linux-os-drive). Je l'ai testé en l'état et apporté mes modifications car je n'arrivais pas à le faire fonctionner. De plus j'ai lu plusieurs posts qui dénoncent l'impossibilité de cloner un système en ligne sous Linux. Tout ce serait arrêté là, si mon travail n'avait pas finalement porté ses fruits... 
 
-J'ai réussi à cloner un disque système en ligne sous Linux et booté sur le disque cloné pour avoir un système (qui semble) pleinement opérationnel.
+J'ai réussi à cloner un disque système en ligne sous Linux et booté sur le disque cloné pour avoir un système (qui semble) pleinement opérationnel :D
 
 Pour le moment, ces tests, je les ai réalisé en environnement virtuel sous KVM/QEmu.
 
