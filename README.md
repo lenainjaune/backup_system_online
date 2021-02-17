@@ -11,7 +11,7 @@ Pour le moment, ces tests, je les ai réalisé en environnement virtuel sous KVM
 
 Voici le résultat :
 ```sh
-# Prévu en l'état pour Debian (testé sous Debian Buster 64 bits) 
+# Prévu en l'état pour Debian (testé sur Debian Buster 64 bits et en particulier 2 OS fraichement installés) 
 #  => adapter pour un autre système ou attendre la MAJ qui gèrera mieux !
 # Pour que GRUB ne fasse pas le lien avec SRC, on rend os-prober INexécutable 
 #  (https://unix.stackexchange.com/questions/634150/hide-devices-in-chrooted-environment/634655#634655)
