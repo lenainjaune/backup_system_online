@@ -17,7 +17,7 @@ Voici le résultat :
 #  (https://unix.stackexchange.com/questions/634150/hide-devices-in-chrooted-environment/634655#634655)
 # Une fois chrooté un script intégré est exécuté et affiché sur stdout ;
 #  il FAUT échapper chaque $ et \ (=> \$ et \\) pour qu'il soient appliqués à l'exécution après le chroot
-# Nota : sda = disque source (sda1 system EXT4, sda2 partition étendue et sda5 swap) et  sdb = disque cible (le clone) 
+# Nota : sda = disque source (sda1 system EXT4, sda2 partition étendue et sda5 swap) et sdb = disque cible (le clone) 
 
 apt -y install dump parted gawk acl
 SRC=/dev/sda TGT=/dev/sdb
