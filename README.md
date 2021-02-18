@@ -45,7 +45,7 @@ mount -t ext4 ${TGT}1 /mnt${TGT}1
    for i in \${!as[@]} ; do sed -i "s/"\$( echo \${as[\$i]} \
       | cut -d '"' -f 2 )"/"\$( echo \${ad[\$i]} \
       | cut -d '"' -f 2 )"/g" /etc/fstab ; done
-   echo RESUME=UUID=\$( blkid |grep -E "\${TGT}.+swap" \
+   echo RESUME=UUID=\$( echo "\$o_blkid" |grep -E "\${TGT}.+swap" \
       | cut -d '"' -f 2 ) > /etc/initramfs-tools/conf.d/resume
    os_prober_path=\$( which os-prober ) \
       && perms=\$( getfacl -e \$os_prober_path ) \
