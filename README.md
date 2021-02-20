@@ -11,46 +11,36 @@ Pour le moment, ces tests, je les ai réalisé en environnement virtuel sous KVM
 
 Voici le résultat :
 ```sh
-# Prévu en l'état pour Debian (testé sur Debian Buster 64 bits et en particulier 2 OS fraichement installés)
-#  => adapter pour un autre système ou attendre la MAJ qui gèrera mieux !
-# Pour que GRUB ne fasse pas le lien avec SRC, on rend os-prober INexécutable 
-#  (https://unix.stackexchange.com/questions/634150/hide-devices-in-chrooted-environment/634655#634655)
-# Une fois chrooté un script intégré est exécuté et affiché sur stdout ;
-#  il FAUT échapper chaque $ et \ (=> \$ et \\) pour qu'il soient appliqués à l'exécution après le chroot
-# Nota 1 : sda = disque source (sda1 system EXT4, sda2 partition étendue, sda5 swap) et sdb = disque cible (le clone)
-# Nota 2 : parties commentées = débbuger (distinguer le disque depuis /part* + simuler affichage menu GRUB)
-# Nota 3 : ne gère pas les formats FS suivants (car le format des UUIDs différents) : NTFS, LVM2
-
 apt -y install dump parted gawk acl
-SRC=/dev/sda TGT=/dev/sdb
+SRC=/dev/sda DST=/dev/sdb
 rm /part_SRC*
-parted ${TGT} mklabel -s "msdos"
+parted ${DST} mklabel -s "msdos"
 sfdisk -d ${SRC} > part_table
-sfdisk --force ${TGT} < part_table
-mkfs.ext4 -F ${TGT}1
-mkswap -f ${TGT}5
-mkdir -p /mnt${TGT}1
-mount -t ext4 ${TGT}1 /mnt${TGT}1
- cd /mnt${TGT}1 ; dump -a0f - ${SRC}1 | restore -rf - ; cd
+sfdisk --force ${DST} < part_table
+mkfs.ext4 -F ${DST}1
+mkswap -f ${DST}5
+mkdir -p /mnt${DST}1
+mount -t ext4 ${DST}1 /mnt${DST}1
+ cd /mnt${DST}1 ; dump -a0f - ${SRC}1 | restore -rf - ; cd
  # touch /part_SRC_$( blkid -s UUID |grep \
  #    $( df -h | grep ${SRC} | cut -f 1 -d " " ) | cut -f 2 -d '"' )
- # touch /mnt${TGT}1/part_TGT_$( blkid -s UUID | grep \
- #    $( df -h | grep ${TGT} | cut -f 1 -d " " ) | cut -f 2 -d '"' )
+ # touch /mnt${DST}1/part_DST_$( blkid -s UUID | grep \
+ #    $( df -h | grep ${DST} | cut -f 1 -d " " ) | cut -f 2 -d '"' )
  for i in /dev /proc /sys /run /sys ; do \
-    mount -B $i /mnt${TGT}1$i; done
-  cat << EOF | o_blkid=$( blkid ) SRC=$SRC TGT=$TGT \
-               chroot /mnt${TGT}1
+    mount -B $i /mnt${DST}1$i; done
+  cat << EOF | o_blkid=$( blkid ) SRC=$SRC DST=$DST \
+               chroot /mnt${DST}1
    as=( \$( echo "\$o_blkid" | grep \${SRC} | sort | tr -d ' ' ) )
-   ad=( \$( echo "\$o_blkid" | grep \${TGT} | sort | tr -d ' ' ) )
+   ad=( \$( echo "\$o_blkid" | grep \${DST} | sort | tr -d ' ' ) )
    for i in \${!as[@]} ; do sed -i "s/"\$( echo \${as[\$i]} \
       | cut -d '"' -f 2 )"/"\$( echo \${ad[\$i]} \
       | cut -d '"' -f 2 )"/g" /etc/fstab ; done
-   echo RESUME=UUID=\$( echo "\$o_blkid" |grep -E "\${TGT}.+swap" \
+   echo RESUME=UUID=\$( echo "\$o_blkid" |grep -E "\${DST}.+swap" \
       | cut -d '"' -f 2 ) > /etc/initramfs-tools/conf.d/resume
    os_prober_path=\$( which os-prober ) \
       && perms=\$( getfacl -e \$os_prober_path ) \
       && chmod a-x \$os_prober_path
-    grub-install \${TGT}
+    grub-install \${DST}
     update-grub
    [[ \$os_prober_path ]] && echo "\$perms" \
       | setfacl -M- \$os_prober_path
@@ -64,9 +54,9 @@ mount -t ext4 ${TGT}1 /mnt${TGT}1
 #'     if ( uuid != \$0 ) { printf " [" uuid "]" } printf "\\n" }' \
 #      /boot/grub/grub.cfg
 EOF
- for i in /dev /proc /sys /run /sys ; do umount -l /mnt${TGT}1$i; done
-umount -l /mnt${TGT}1
-rmdir /mnt${TGT}1
+ for i in /dev /proc /sys /run /sys ; do umount -l /mnt${DST}1$i; done
+umount -l /mnt${DST}1
+rmdir /mnt${DST}1
 ```
 En réalité, j'ai tout de même vu quelques différences qui ralentissent (un peu) le démarrage et qui me font doûter de l'exactitude fonctionnelle du système cloné.
 
