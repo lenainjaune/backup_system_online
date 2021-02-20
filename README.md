@@ -13,7 +13,7 @@ Voici le résultat :
 ```sh
 apt -y install dump parted gawk acl
 SRC=/dev/sda DST=/dev/sdb
-rm /part_SRC*
+# rm /part_SRC*
 parted ${DST} mklabel -s "msdos"
 sfdisk -d ${SRC} > part_table
 sfdisk --force ${DST} < part_table
@@ -26,35 +26,27 @@ mount -t ext4 ${DST}1 /mnt${DST}1
  #    $( df -h | grep ${SRC} | cut -f 1 -d " " ) | cut -f 2 -d '"' )
  # touch /mnt${DST}1/part_DST_$( blkid -s UUID | grep \
  #    $( df -h | grep ${DST} | cut -f 1 -d " " ) | cut -f 2 -d '"' )
- for i in /dev /proc /sys /run /sys ; do \
-    mount -B $i /mnt${DST}1$i; done
-  cat << EOF | o_blkid=$( blkid ) SRC=$SRC DST=$DST \
-               chroot /mnt${DST}1
-   as=( \$( echo "\$o_blkid" | grep \${SRC} | sort | tr -d ' ' ) )
-   ad=( \$( echo "\$o_blkid" | grep \${DST} | sort | tr -d ' ' ) )
-   for i in \${!as[@]} ; do sed -i "s/"\$( echo \${as[\$i]} \
-      | cut -d '"' -f 2 )"/"\$( echo \${ad[\$i]} \
-      | cut -d '"' -f 2 )"/g" /etc/fstab ; done
-   echo RESUME=UUID=\$( echo "\$o_blkid" |grep -E "\${DST}.+swap" \
-      | cut -d '"' -f 2 ) > /etc/initramfs-tools/conf.d/resume
-   os_prober_path=\$( which os-prober ) \
-      && perms=\$( getfacl -e \$os_prober_path ) \
-      && chmod a-x \$os_prober_path
-    grub-install \${DST}
-    update-grub
-   [[ \$os_prober_path ]] && echo "\$perms" \
-      | setfacl -M- \$os_prober_path
-#   gawk '/^(menuentry|submenu)/ { printf '\
-#'     gensub( /[^\\x27]+\\x27([^\\x27]+)\\x27.+/ , "\\\\1" , "g" ) ; '\
-#'     uuid = gensub( '\
-#'     /.+'\
-#'     ([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'\
-#'     .*/ '\
-#'     , "\\\\1" , "g" ) ; '\
-#'     if ( uuid != \$0 ) { printf " [" uuid "]" } printf "\\n" }' \
-#      /boot/grub/grub.cfg
+ as=( $( blkid | grep ${SRC} | sort | tr -d ' ' ) )
+ ad=( $( blkid | grep ${DST} | sort | tr -d ' ' ) )
+ for i in ${!as[@]} ; do sed -i "s/"$( echo ${as[ $i ]} \
+    | cut -d '"' -f 2 )"/"$( echo ${ad[ $i ]} \
+    | cut -d '"' -f 2 )"/g" /mnt${DST}1/etc/fstab ; done
+ echo RESUME=UUID=$( blkid |grep -E "${DST}.+swap" \
+    | cut -d '"' -f 2 ) > /mnt${DST}1/etc/initramfs-tools/conf.d/resume
+ for f in /dev /proc /sys /run /sys ; do \
+    mount -B $f /mnt${DST}1$f ; done
+cat << EOF | DST=$DST chroot /mnt${DST}1
+ os_prober_path=\$( which os-prober ) \
+    && perms=\$( getfacl -e \$os_prober_path ) \
+    && chmod a-x \$os_prober_path
+ grub-install \${DST}
+ update-grub
+ [[ \$os_prober_path ]] && echo "\$perms" \
+    | setfacl -M- \$os_prober_path
 EOF
- for i in /dev /proc /sys /run /sys ; do umount -l /mnt${DST}1$i; done
+ for f in /dev /proc /sys /run /sys ; do \
+    umount -l /mnt${DST}1$f ; done
+#  gawk '/^(menuentry|submenu)/' /mnt${DST}1/boot/grub/grub.cfg
 umount -l /mnt${DST}1
 rmdir /mnt${DST}1
 ```
