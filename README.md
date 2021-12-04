@@ -1,5 +1,7 @@
 # backup_system_online
 
+TODO : pour les problèmes **mdadm** en appliquant ce qui est proposé depuis [ce lien](https://forum.openmediavault.org/index.php?thread/21351-mdadm-no-arrays-found-in-config-file-or-automatically/&postID=272879#post272879) j'ai réussi à corriger une restauration qui donnait les mêmes symptômes (/var/log/boot.log permet de relire les messages) => à confirmer !
+
 J'ai lu les préconisations du NAS OMV (https://openmediavault.readthedocs.io/en/5.x/new_user_guide/newuserguide.html#a-last-important-note-about-backing-up-your-os)
 "Can it be assumed that those same software repositories and resources will be available on some future date, exactly as they were at the time of a current build? The answer is “No”. Distributions of a specific Linux version, complete with specific applications, fully patched and updated, can be built for a limited time."
 
@@ -62,4 +64,4 @@ rmdir /mnt${DST}1
 ```
 En réalité, j'ai tout de même vu quelques différences qui ralentissent (un peu) le démarrage et qui me font doûter de l'exactitude fonctionnelle du système cloné.
 
-Pour un clone du disque système de OMV, au démarrage j'ai un message "mdadm: no arrays found in config file or automatically" répété des dizaines de fois, qui ralentit le démarrage et que j'ai essayé de résoudre à partir de ce lien (https://forum.openmediavault.org/index.php?thread/21351-mdadm-no-arrays-found-in-config-file-or-automatically/&pageNo=6) et d'autres sans succès. Aussi, j'ai remarqué que lorsque j'attache à nouveau le disque source à l'hôte et que je boote sur le clone, le problème est résolu. J'en ai déduit que le clone a encore des "trucs" qui sont liés au disque source. D'après mes connaissances, il y a deux choses qui permettent de référer à un disque : son nom de device (/dev/sda par ex) qui n'est pas garanti être permanent et les UUID qui eux sont uniques
+Pour un clone du disque système de OMV, au démarrage j'ai un message "mdadm: no arrays found in config file or automatically" répété des dizaines de fois, qui ralentit le démarrage et que j'ai essayé de résoudre à partir de ce lien (https://forum.openmediavault.org/index.php?thread/21351-mdadm-no-arrays-found-in-config-file-or-automatically/&pageNo=6) et d'autres sans succès. Aussi, j'ai remarqué que lorsque j'attache à nouveau le disque source à l'hôte et que je boote sur le clone, le problème est résolu. J'en ai déduit que le clone a encore des "trucs" qui sont liés au disque source. D'après mes connaissances, il y a deux choses qui permettent de référer à un disque : son nom de device (/dev/sda par ex) qui n'est pas garanti être permanent et les UUID qui eux sont uniques.
