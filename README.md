@@ -45,7 +45,7 @@ mount -t ext4 ${DST}1 /mnt${DST}1
     | cut -d '"' -f 2 )"/g" /mnt${DST}1/etc/fstab ; done
  echo RESUME=UUID=$( blkid |grep -E "${DST}.+swap" \
     | cut -d '"' -f 2 ) > /mnt${DST}1/etc/initramfs-tools/conf.d/resume
- for f in /dev /proc /sys /run /sys ; do \
+ for f in /dev /dev/pts /proc /sys /run /sys ; do \
     mount -B $f /mnt${DST}1$f ; done
 cat << EOF | DST=$DST chroot /mnt${DST}1
  os_prober_path=\$( which os-prober ) \
@@ -56,7 +56,7 @@ cat << EOF | DST=$DST chroot /mnt${DST}1
  [[ \$os_prober_path ]] && echo "\$perms" \
     | setfacl -M- \$os_prober_path
 EOF
- for f in /dev /proc /sys /run /sys ; do \
+ for f in /dev/pts /dev /proc /sys /run /sys ; do \
     umount -l /mnt${DST}1$f ; done
 #  gawk '/^(menuentry|submenu)/' /mnt${DST}1/boot/grub/grub.cfg
 umount -l /mnt${DST}1
