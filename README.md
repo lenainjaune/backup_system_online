@@ -2,6 +2,8 @@
 
 TODO : pour les problèmes **mdadm** en appliquant ce qui est proposé depuis [ce lien](https://forum.openmediavault.org/index.php?thread/21351-mdadm-no-arrays-found-in-config-file-or-automatically/&postID=272879#post272879) j'ai réussi à corriger une restauration qui donnait les mêmes symptômes (/var/log/boot.log permet de relire les messages) => à confirmer !
 
+Voir aussi dans les projets en local
+
 J'ai lu les préconisations du NAS OMV (https://openmediavault.readthedocs.io/en/5.x/new_user_guide/newuserguide.html#a-last-important-note-about-backing-up-your-os)
 "Can it be assumed that those same software repositories and resources will be available on some future date, exactly as they were at the time of a current build? The answer is “No”. Distributions of a specific Linux version, complete with specific applications, fully patched and updated, can be built for a limited time."
 
