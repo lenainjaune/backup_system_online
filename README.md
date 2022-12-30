@@ -1,3 +1,43 @@
+RO en attente de la fin de migration
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # backup_system_online
 
 TODO : pour les problèmes **mdadm** en appliquant ce qui est proposé depuis [ce lien](https://forum.openmediavault.org/index.php?thread/21351-mdadm-no-arrays-found-in-config-file-or-automatically/&postID=272879#post272879) j'ai réussi à corriger une restauration qui donnait les mêmes symptômes (/var/log/boot.log permet de relire les messages) => à confirmer !
